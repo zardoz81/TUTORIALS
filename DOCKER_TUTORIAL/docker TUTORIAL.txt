@@ -1,0 +1,111 @@
+Docker TUTORIAL
+
+1) Create an empty directory (say DOCKER_TUTORIAL)
+2) cd DOCKER_TUTORIAL
+3) create Dockerfile there:
+
+		FROM python:3.7.3-slim
+
+		# Install jupyter:
+		RUN pip3 install jupyter
+
+		# alternatively, you can list all the dependencies in a separate file:
+		COPY requirements.txt ./
+		RUN pip install --no-cache-dir -r requirements.txt
+
+		# expose a port to the host machine:
+		EXPOSE 8888
+
+		# Start the jupyter notebook
+		# ENTRYPOINT ["jupyter", "notebook", "--ip=*", "--allow-root"]
+
+
+4) Build a docker container based on the description in Dockerfile in the CURRENT (.) directory (MC) and call it "jupyter":
+	
+	docker build -t jupyter .
+
+5) see the id of the image just created
+	
+	docker images
+
+	(base) Romans-MacBook-Pro:MC romankoshkin$ docker images
+	REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+	jupyter             latest              05dd90443990        40 seconds ago      244MB
+	python              3.7.3-slim          338ae06dfca5        3 months ago        143MB
+
+6) Run the docker image:
+
+docker run  -it -p 8888:8888 --entrypoint /bin/bash jupyter    # WHERE jupyter is the image tag
+
+where 
+	-p 8888:8888 means that you create a container from an image named 'jupyter', you forward port 8888 (of the container) to port 8888 (of the host)
+
+Here, we tell docker to create a container from the jupyter image, then launch bash (which is in the /bin folder of the container)
+
+After running this command, you see bash prompt (bash runs inside the container). Run the following commind there
+root@b5b68bcbcdce:/#
+
+If you want to exit bash running in a container, type
+
+exit
+
+7 ) To open a Jupyter Notebook running inside a container, type in the bash:
+
+jupyter notebook --ip=* --allow-root
+
+You get the following response:
+
+To access the notebook, open this file in a browser:
+        file:///root/.local/share/jupyter/runtime/nbserver-6-open.html
+    Or copy and paste one of these URLs:
+        http://b5b68bcbcdce:8888/?token=86bd7d87bf73eb9c546aab8792efa01b86806e52bc741e8a
+     or http://127.0.0.1:8888/?token=86bd7d87bf73eb9c546aab8792efa01b86806e52bc741e8a
+
+
+8) Copy and paste the URL into your the browser on the host machine and use the Jupyter Notebook running in a container!
+
+9) If some packages are not installed in the container, you can install them:
+
+	- Open a Jupyter Notebook in the container (see above) (if you haven't yet). 
+	- Click New --> Terminal. 
+	- Run pip install numpy
+
+
+++++++++++++++++++++++++++++++++
+IF YOU WANT TO STOP AND REMOVE CONTAINERS (NOT IMAGES):
+++++++++++++++++++++++++++++++++
+
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+
+++++++++++++++++++++++++++++++++
+IF YOU WANT TO RUN ALL THOSE THINGS IN ONE GO 	$ AND $ MAKE HOST FOLDER I/O AVAILABLE:
+++++++++++++++++++++++++++++++++
+
+1) you need to have a docker-compose.yml that looks like this:
+
+
+	version:                "3"
+	services:
+	  datascience-notebook:
+	      image:            jupyter # the image from which we will instantiate a container
+	      volumes:
+	        - /Users/romankoshkin/Documents/TUTORIALS/DOCKER_TUTORIAL:/root. # we map the /Users/romankoshkin/MC folder on the host to the /root folder in the container to allow read and write
+	      ports:
+	        - 8888:8888             # what port in the container is forwarded to what port on the host
+	      container_name:   jupyter # the container name
+
+	      command:
+	        - jupyter               # so when the image is created, we run this 
+	        - notebook              # and this
+	        # with the following options (as if run in the terminal)
+	        - --notebook-dir=/root. # this means that the Jupyter Notebook will have its directory in the /root folder of the machine running in the container
+	        - --ip=*                # ???
+	        - --allow-root          # ???
+
+2) from the directory where the files docker-compose.yml and Dockerfile are, run
+
+docker-compose up
+
+
+

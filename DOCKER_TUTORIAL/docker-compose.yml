@@ -1,0 +1,17 @@
+version:                "3"
+services:
+  datascience-notebook:
+      image:            jupyter # the image from which we will instantiate a container
+      volumes:
+        - /Users/romankoshkin/Documents/TUTORIALS/DOCKER_TUTORIAL:/root. # we map the /Users/romankoshkin/MC folder on the host to the /root folder in the container to allow read and write
+      ports:
+        - 8888:8888             # what port in the container is forwarded to what port on the host
+      container_name:   jupyter # the container name
+
+      command:
+        - jupyter               # so when the image is created, we run this 
+        - notebook              # and this
+        # with the following options (as if run in the terminal)
+        - --notebook-dir=/root. # this means that the Jupyter Notebook will have its directory in the /root folder of the machine running in the container
+        - --ip=*                # ???
+        - --allow-root          # ???
