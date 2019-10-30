@@ -90,7 +90,7 @@ IF YOU WANT TO RUN ALL THOSE THINGS IN ONE GO 	$ AND $ MAKE HOST FOLDER I/O AVAI
 	  datascience-notebook:
 	      image:            jupyter # the image from which we will instantiate a container
 	      volumes:
-	        - /Users/romankoshkin/Documents/TUTORIALS/DOCKER_TUTORIAL:/root. # we map the /Users/romankoshkin/MC folder on the host to the /root folder in the container to allow read and write
+	        - /Users/romankoshkin/Documents/TUTORIALS/DOCKER_TUTORIAL:/root. # we map the /Users/romankoshkin/Documents/TUTORIALS/DOCKER_TUTORIAL folder on the host to the /root. folder in the container to allow read and write between the host and the container
 	      ports:
 	        - 8888:8888             # what port in the container is forwarded to what port on the host
 	      container_name:   jupyter # the container name
