@@ -2,8 +2,11 @@ FROM python:3.7.3-slim
 
 # Install jupyter:
 RUN pip3 install jupyter
-# RUN apt-get update
-# RUN apt-get install nano
+
+# update package lists (to be able to install sudo, nano and othe things needed for linux)
+RUN apt-get update
+RUN apt-get install nano
+RUN apt-get install sudo
 
 # alternatively, you can list all the dependencies in a separate file:
 COPY requirements.txt ./
