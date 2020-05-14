@@ -1,0 +1,34 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+svg#world {
+    background-color: white;
+}
+
+#module-overlays {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+}
+
+ul#module-overlays {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul#module-overlays li {
+    display: inline;
+    padding-right: 10px;
+}
+
+#module-overlays svg {
+    border: 1px solid black;
+    background-color: white;
+}
+
+#world {
+    cursor: url("/static/img/mouse-cursor.png") 32 32, auto;
+}

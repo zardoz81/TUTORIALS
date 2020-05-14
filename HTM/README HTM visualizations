@@ -1,0 +1,27 @@
+HTM visualizations
+
+https://discourse.numenta.org/t/how-to-run-htm-school-visualizations/2346
+
+cd Documents/TUTORIALS/HTM/
+conda activate HTM
+export HTM_SERVER=/Users/romankoshkin/Documents/TUTORIALS/HTM/nupic-history-server-master
+export CELL_VIZ=/Users/romankoshkin/Documents/TUTORIALS/HTM/cell-viz-master
+export HTM_VIZ=/Users/romankoshkin/Documents/TUTORIALS/HTM/htm-school-viz-master
+cd $HTM_SERVER
+python webserver.py 8080
+
+
+cd Documents/TUTORIALS/HTM/
+conda activate HTM
+export HTM_SERVER=/Users/romankoshkin/Documents/TUTORIALS/HTM/nupic-history-server-master
+export CELL_VIZ=/Users/romankoshkin/Documents/TUTORIALS/HTM/cell-viz-master
+export HTM_VIZ=/Users/romankoshkin/Documents/TUTORIALS/HTM/htm-school-viz-master
+cd $CELL_VIZ
+webpack
+
+ln -s $CELL_VIZ/out/dyson.js $HTM_VIZ/static/js/third/dyson-bundle.js
+
+cd $HTM_VIZ
+npm start
+
+http://localhost:8001

@@ -1,0 +1,96 @@
+<!-- n -->
+<div class="row">
+    <div class="col-md-1 data-label">n</div>
+    <div class="col-md-1" id="n-display">loading...</div>
+    <div class="col-md-4 slider">
+        <div class="row">
+            <div class="col-md-2">
+                <button id="go-big-btn" type="button" class="btn btn-warning go-big">Go Big</button>
+            </div>
+            <div class="col-md-10">
+                <div class="big-warning" style="display:none">
+                    <p class="bg-danger">Only <span id="sdr-portion"></span> of the SDRs on this page are being displayed!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- w -->
+<div class="row">
+    <div class="col-md-1 data-label">w</div>
+    <div class="col-md-1" id="w-display">loading...</div>
+    <div class="col-md-4 slider"></div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- union density -->
+<div class="row">
+    <div class="col-md-1 data-label">union density</div>
+    <div class="col-md-1" id="union-density"></div>
+    <div class="col-md-1" id="match"></div>
+    <div class="col-md-1">
+        SDRs in Union: <span id="sdr-count"></span>
+    </div>
+    <div class="col-md-2">
+        Probability of False Positive: <span id="fpp-value"></span>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- spacer -->
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+    </div>
+</div>
+
+<!-- next sdr / match sdr -->
+<div class="row">
+    <div class="col-md-10" id="next-sdr" class="sdr"></div>
+    <p class="col-md-2 next-match" style="display:none">
+        ⬅︎ Matching against the union
+    </p>
+</div>
+
+<!-- labels / buttons -->
+<div class="row">
+    <div class="col-md-12" align="center">
+        <div class="btn-group" role="group">
+            <button id="add-btn" type="button" class="btn btn-primary btn-lg">Add SDR to Stack</button>
+            <button id="populate-btn" type="button" class="btn btn-primary btn-lg">Add Many SDRs to Stack</button>
+        </div>
+        <div class="btn-group" role="group">
+            <button id="match-btn" type="button" class="btn btn-warning btn-lg">Match Random</button>
+        </div>
+    </div>
+</div>
+
+<!-- spacer -->
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+        Union
+    </div>
+</div>
+
+<!-- union sdr -->
+<div class="row">
+    <div class="col-md-10">
+        <div id="union-sdr"></div>
+    </div>
+    <div class="col-md-2">
+        <div id="union-overlap"></div>
+    </div>
+</div>
+
+<!-- spacer -->
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+    </div>
+</div>
+
+<!-- sdr stack -->
+<div id="sdr-stack"></div>

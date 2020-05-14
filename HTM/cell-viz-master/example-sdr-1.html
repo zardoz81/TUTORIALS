@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>2D SDR Drawing</title>
+    <style>
+        body { margin: 10px; }
+        svg {
+            border: solid 1px orange;
+        }
+    </style>
+</head>
+<body>
+
+<svg id="receptiveFieldDemo"></svg>
+<br/>
+<input type="range" min="0" max="100" value="90" id="receptiveFieldPercSlider" />
+receptive field: <span class="receptiveFieldPercDisplay"></span>%
+<br/>
+<input type="range" min="0" max="100" value="50" id="connectionThresholdSlider" />
+connection threshold: <span class="connectionThresholdDisplay"></span>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="dist/cell-viz-2d-1.4.6.min.js"></script>
+<script>
+
+    $(function() {
+
+        function getRandomReceptiveField(receptiveFieldPerc, dimensions) {
+            let n = dimensions
+            let w = parseInt(receptiveFieldPerc * n)
+            let potentialPool = SdrUtils.getRandom(n, w)
+            return potentialPool
+        }
+        let inputSpace = 1000
+        let $connectionThresholdSlider = $('#connectionThresholdSlider')
+        let $connectionThresholdDisplays = $('.connectionThresholdDisplay')
+        let $receptiveFieldPercSlider = $('#receptiveFieldPercSlider')
+        let $receptiveFieldPercDisplay = $('.receptiveFieldPercDisplay')
+        let drawOptions = {
+            width: 560,
+            height: 560,
+            gradientFill: true,
+        }
+        let pool = getRandomReceptiveField(.5, inputSpace)
+        let perms
+
+        function updatePerms() {
+            perms = d3.range(inputSpace)
+                .map(d3.randomBates(20))
+                .map((p, i) => {
+                    if (pool[i] === 0) return null
+                    return p
+                })
+        }
+
+        function renderDisplay() {
+            let threshold = parseInt($connectionThresholdSlider.val()) / 100
+            $connectionThresholdDisplays.html(threshold)
+            $receptiveFieldPercDisplay.html($receptiveFieldPercSlider.val())
+            let rcDrawing = new SdrDrawing(perms, 'receptiveFieldDemo')
+            drawOptions.threshold = parseInt($connectionThresholdSlider.val()) / 100
+            rcDrawing.draw(drawOptions)
+        }
+
+        updatePerms()
+        renderDisplay()
+
+        $receptiveFieldPercSlider.on('input', () => {
+            let targetDensity = parseInt($receptiveFieldPercSlider.val()) / 100
+            pool = SdrUtils.adjustTo(pool, targetDensity)
+            updatePerms()
+            renderDisplay()
+        })
+
+        $connectionThresholdSlider.on('input', () => {
+            updatePerms()
+            renderDisplay()
+        })
+
+    });
+
+</script>
+
+</body>
+</html>

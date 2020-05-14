@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>2D SDR Drawing</title>
+    <style>
+        body { margin: 10px; }
+        svg {
+            border: solid 1px orange;
+        }
+    </style>
+</head>
+<body>
+
+<svg id="receptiveFieldDemo"></svg>
+<br/>
+<input type="range" min="0" max="100" value="90" id="receptiveFieldPercSlider" />
+receptive field: <span class="receptiveFieldPercDisplay"></span>%
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="dist/cell-viz-2d-1.4.6.min.js"></script>
+<script>
+
+    $(function() {
+
+        function getRandomReceptiveField(receptiveFieldPerc, dimensions) {
+            let n = dimensions
+            let w = parseInt(receptiveFieldPerc * n)
+            let potentialPool = SdrUtils.getRandom(n, w)
+            return potentialPool
+        }
+        let inputSpace = 1000
+        let $receptiveFieldPercSlider = $('#receptiveFieldPercSlider')
+        let $receptiveFieldPercDisplay = $('.receptiveFieldPercDisplay')
+        let drawOptions = {
+            width: 560,
+            height: 300,
+        }
+        let pool = getRandomReceptiveField(.5, inputSpace)
+
+        function renderDisplay() {
+            $receptiveFieldPercDisplay.html($receptiveFieldPercSlider.val())
+            let rcDrawing = new SdrDrawing(pool, 'receptiveFieldDemo')
+            rcDrawing.draw(drawOptions)
+        }
+
+        renderDisplay()
+
+        $receptiveFieldPercSlider.on('input', () => {
+            let targetDensity = parseInt($receptiveFieldPercSlider.val()) / 100
+            pool = SdrUtils.adjustTo(pool, targetDensity)
+            renderDisplay()
+        })
+
+    });
+
+</script>
+
+</body>
+</html>

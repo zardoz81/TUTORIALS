@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-md-2">
+        <div class="player text-center">
+            <button type="button" id="prev" class="btn">
+                <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+            </button>
+            <button type="button" id="play" class="btn">
+                        <span class="glyphicon glyphicon-play"
+                              aria-hidden="true"></span>
+            </button>
+            <button type="button" id="stop" class="btn">
+                        <span class="glyphicon glyphicon-stop"
+                              aria-hidden="true"></span>
+            </button>
+            <button type="button" id="next" class="btn">
+                <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 data-label">power consumption</div>
+            <div class="col-sm-6 data" id="power-display"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 data-label">time of day</div>
+            <div class="col-sm-6 data" id="tod-display"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 data-label">weekend</div>
+            <div class="col-sm-6 data" id="weekend-display"></div>
+        </div>
+    </div>
+    <div class="col-md-10" id="input-chart"></div>
+</div>
+
+<hr />
+
+<div class="sdrs">
+    <div class="row">
+        <div class="col-md-5">
+            <h2>Input Space <small>(encoding)</small></h2>
+        </div>
+        <div class="col-md-5">
+            <h2>Active SP Columns</h2>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-5" id="input-encoding"></div>
+        <div class="col-md-5" id="active-columns"></div>
+        <div class="col-md-2"></div>
+    </div>
+
+</div>
+
+<div id="loading" style="display:none">
+    <img src="/static/img/ajax-loader.gif"/>
+</div>

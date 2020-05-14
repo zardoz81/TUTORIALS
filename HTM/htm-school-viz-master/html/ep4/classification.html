@@ -1,0 +1,103 @@
+<!-- n -->
+<div class="row">
+    <div class="col-md-1 data-label">n</div>
+    <div class="col-md-1" id="n-display">loading...</div>
+    <div class="col-md-4 slider">
+        <div class="row">
+            <div class="col-md-2">
+                <button id="go-big-btn" type="button" class="btn btn-warning go-big">Go Big</button>
+            </div>
+            <div class="col-md-10">
+                <div class="big-warning" style="display:none">
+                    <p class="bg-danger">Only <span id="sdr-portion"></span> of the SDRs on this page are being displayed!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- w -->
+<div class="row">
+    <div class="col-md-1 data-label">w</div>
+    <div class="col-md-1" id="w-display">loading...</div>
+    <div class="col-md-4 slider"></div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- theta -->
+<div class="row">
+    <div class="col-md-1 data-label">&theta;</div>
+    <div class="col-md-1" id="theta-display">loading...</div>
+    <div class="col-md-4 slider" id="theta-slider"></div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- t -->
+<div class="row">
+    <div class="col-md-1 data-label">t <small>(bits of noise)</small></div>
+    <div class="col-md-1" id="t-display">loading...</div>
+    <div class="col-md-4 slider" id="t-slider"></div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- sparsity -->
+<div class="row">
+    <div class="col-md-1 data-label">sparsity</div>
+    <div class="col-md-1 value" id="sparsity-display">loading...</div>
+    <div class="col-md-2">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" id="fpp-on"> Calculate False Positive
+            </label>
+        </div>
+    </div>
+    <div class="col-md-2">
+        SDRs in Set: <span id="sdr-count"></span>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+
+<!-- spacer -->
+<div class="row">
+    <div class="col-md-12">
+        <hr/>
+    </div>
+</div>
+
+<!-- next sdr / match sdr -->
+<div class="row">
+    <div class="col-md-10" id="next-sdr" class="sdr"></div>
+    <p class="col-md-2 next-match" style="display:none">
+        ⬅︎ Matching against the stack
+    </p>
+</div>
+
+<!-- labels / buttons -->
+<div class="row">
+    <div class="col-md-12" align="center">
+        <div id="false-positive-display" style="display:none">
+            Probability of False Positive: <span id="fpp-value"></span>
+        </div>
+        <div style="display:none" class="match-instructions">
+            <hr/>
+            <p>Click on an SDR below to match.</p>
+        </div>
+        <div class="btn-group" role="group">
+            <button id="add-btn" type="button" class="btn btn-primary btn-lg">Add SDR to Stack</button>
+            <button id="populate-btn" type="button" class="btn btn-primary btn-lg">Add Many SDRs to Stack</button>
+        </div>
+        <div class="btn-group" role="group">
+            <button id="switch-btn" type="button" class="btn btn-warning btn-lg">Match</button>
+        </div>
+    </div>
+</div>
+
+
+<!-- sdr stack -->
+<div class="row">
+    <div class="col-md-12">
+        <div id="sdr-stack"></div>
+    </div>
+</div>
+

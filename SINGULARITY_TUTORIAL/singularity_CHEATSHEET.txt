@@ -1,0 +1,182 @@
+3 ПАПКИ
+.vagrand.d
+VirtualBox VMs
+
+
+
+https://www.youtube.com/watch?v=nrgO3Q8-6hQ
+https://github.com/kalaspuffar/singularity-example
+
+https://www.youtube.com/watch?v=m8llDjFuXlc
+
+https://singularity.lbl.gov/install-mac
+
+
+- на маке singularity запускается из виртуальной машины (где guest OS это Linux). Эти машины лежат в папке VirtualBox VMs
+- Создаём новые машины:
+    init singularityware/singularity-2.4
+    vagrant up (из той же папки откуда выполняем предыдущую команду, тк при иниц создаётся файл Vagrantfile)
+    vagrant ssh (если не зашёл в vagrant@vagrant:~$ 
+- удалить VM (которая находится с папке VirtualBox VMs) можно командой vagrant destroy
+- запустить VM можно командой vagrant ssh, после выполнения которой мы попадаем в папку /home/vagrant гостевой linux-системы (с которой можно тоже делать всё, что хочешь)
+- уже в ЭТОЙ гостевой системе создаём контейнеры, пишем образы и т.д.
+
+- создаём контейнер. При этом создётся папка ubuntu на виртуальной гостевой linux
+sudo singularity build --sandbox ubuntu/ docker://ubuntu (Focal)
+или
+sudo singularity build --sandbox ubuntu_s docker://ubuntu:18.04 (Bionic)
+
+- запускаем контейнер (т.е. это уже виртуальная система в виртуальной системе)
+sudo singularity exec --writable ubuntu /bin/bash
+sudo singularity shell --writable ubuntu
+
+- проверяем версию Ubuntu
+    cat /etc/os-release
+    
+
+- устанавливаем всё необходимое
+    su -
+    apt-get update
+    apt-get install sudo
+    apt-get install wget
+    apt-get install apt-transport-https
+
+    ставим Python
+    apt-get install python3.7
+    apt-get install curl
+    curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py"
+    python get-pip.py
+
+- выходим из контейнера (exit)
+
+- создаём image ИЗ УЖЕ ГОТОВОГО КОНТЕЙНЕРА. Контейнер записывается с текущую папку
+    vagrant@vagrant:~$ sudo singularity build work.sif ubuntu      (т.е. work.sif - это target, ubuntu - source)
+
+- можно запусть контейнер из образа:
+    sudo singularity exec work.sif /bin/bash
+
+- to copy any file from the virtual machine (hosted by vagrant):
+    scp -P 2222 vagrant@127.0.0.1:/home/vagrant/work.sif .
+    password: vagrant
+
+- to copy file from the host to the guest 
+    scp -P 2222 ./test.py vagrant@127.0.0.1:~
+    then move the file from the guest's root to any folder in the image file (e.g. ubuntu_s)
+
+- to upload the sif to sango:
+    scp work.sif roman-koshkin@sango.oist.jp:.
+
+- можно выполнить питновский файл (лежащий в папке /root/)
+    sudo singularity exec ubuntu_s python3 /root/test.py
+
+========+++++ JUPYTER NOTEBOOK FROM A SINGULARITY CONTAINER ========+++++
+========================================================================
+FIRST:
+    https://github.com/singularityhub/jupyter   (SEE HERE !!!!)
+The Vagrant file must have this line (to enable port forwarding from the Vagrant host to the local host)
+SECOND:
+    config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1"
+
+
+
+vagrant up
+vagrant ssh
+
+sudo singularity run --writable ubuntu_s /bin/bash    (where ununtu_s is a built --sandbox container)
+OR from an image:
+sudo singularity exec xenial.sif /bin/bash
+
+jupyter notebook --ip='*' --port=8888 --no-browser --allow-root
+
+OR on Sango:
+
+screen 
+srun --time=24:00:00 --cpus-per-task=1 --partition=compute --mem=2G --ntasks=1 --pty bash
+module load singularity/3.0.3
+singularity exec xenial.sif jupyter notebook --ip='*' --port=8888 --no-browser --allow-root
+Ctrl-a-d (to detach the screen and allow the process to run even after closing the terminal)
+
+Btw, 
+screen -ls lists all screens
+Screen -r <screen ID> takes you back to the screen 
+Ctrl-d  terminates the screen (or ssh session)
+
+========================================================================
+VAGRANT FILE
+
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  config.vm.box = "singularityware/singularity-2.4"
+  config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1"
+
+  # Disable automatic box update checking. If you disable this, then
+  # boxes will only be checked for updates when the user runs
+  # `vagrant box outdated`. This is not recommended.
+  # config.vm.box_check_update = false
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine. In the example below,
+  # accessing "localhost:8080" will access port 80 on the guest machine.
+  # NOTE: This will enable public access to the opened port
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # Create a forwarded port mapping which allows access to a specific port
+  # within the machine from a port on the host machine and only allow access
+  # via 127.0.0.1 to disable public access
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  # config.vm.network "private_network", ip: "192.168.33.10"
+
+  # Create a public network, which generally matched to bridged network.
+  # Bridged networks make the machine appear as another physical device on
+  # your network.
+  # config.vm.network "public_network"
+
+  # Share an additional folder to the guest VM. The first argument is
+  # the path on the host to the actual folder. The second argument is
+  # the path on the guest to mount the folder. And the optional third
+  # argument is a set of non-required options.
+  # config.vm.synced_folder "../data", "/vagrant_data"
+
+  # Provider-specific configuration so you can fine-tune various
+  # backing providers for Vagrant. These expose provider-specific options.
+  # Example for VirtualBox:
+  #
+  # config.vm.provider "virtualbox" do |vb|
+  #   # Display the VirtualBox GUI when booting the machine
+  #   vb.gui = true
+  #
+  #   # Customize the amount of memory on the VM:
+  #   vb.memory = "1024"
+  # end
+  #
+  # View the documentation for the provider you are using for more
+  # information on available options.
+
+  # Enable provisioning with a shell script. Additional provisioners such as
+  # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
+  # documentation for more information about their specific syntax and use.
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
+end
+
+========================================================================
+
+
+
