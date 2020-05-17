@@ -78,7 +78,7 @@ SECOND:
     config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1"
 
 
-
+!! ИЗ ПАПКИ, где лежит Vagrantfile (который создаётся командой vagrant init, см. выше)
 vagrant up
 vagrant ssh
 
