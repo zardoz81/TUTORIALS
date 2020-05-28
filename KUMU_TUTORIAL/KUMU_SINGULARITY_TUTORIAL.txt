@@ -1,0 +1,42 @@
+
+
+KUMU instances: (SEE THE PDF 'KUMU.pdf')
+
+Dashboard:
+https://dashboard.kumu.oist.jp/project/instances/
+
+1) Create a key pair on the local machine 
+	ssh-keygen -t rsa -f cloud.key
+	you'll get two files:
+		cloud.key     (private)
+		cloud.key.pub (public)
+
+2) In Kumu Create a Security Group called SSH
+
+3) Create a VM instance
+	- upload your public key
+	- attach a floating IP address
+	- don't forget to add the SSH security group
+	- choose the flavor
+
+4) when the instance is provisioned:
+	ssh -i <path/to/private.key> ubuntu@<floatingIpAddress> (higher)
+	ssh -i <path/to/private.key> root@<floatingIpAddress> (xenial)
+	ssh root@10.155.8.38 -i cloud.key (WHERE THE IP address IS THE FLOATING IP PROVISIONED BY TO THE VM INSTANCE)
+
+install singularity: (see the PDF 'SINGULARITY INSTALLATION.PDF')
+
+
+5) copy files from you localhost to the VM instance (you'll need the same key)
+scp -i cloud.key ./work.sif root@10.155.8.38:.
+You can copy it from the guest system (hosted by VAGRANT running on you Mac) 
+
+
+PORT FORWARDING:
+
+6) if you want to run a Jupyter notebook running in a guest system hosted on a VM, do
+ssh -L 8000:localhost:8888 root@10.155.8.38 -i cloud.key (THIS MEANS THAT YOU WHAT LOCAL PORT 8000 WILL BE FORWARDED (I.E. CONNECTED) TO REMOTE PORT 8888
+singularity exec work.sif jupyter notebook --ip='*' --port=8888 --no-browser --allow-root (THIS RUNS JUPYTER IN A SINGULARITY CONTAINER ON PORT 8888 THERE)
+
+WE GET: http://127.0.0.1:8888/?token=c50dc3e2b2c1373f649d8c89e0eb01b72a787814ba0b32b7
+COPY AND PASTE THIS LINK TO YOU BROWSER (BUT CHANGE THE PORT TO 8000) BECAUSE WHAT HAPPENS THERE ON PORT 8888 WILL BE FORWARDED TO YOUR MAC'S PORT 8000
