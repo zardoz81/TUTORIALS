@@ -2,6 +2,7 @@
 .vagrand.d
 VirtualBox VMs
 
+HE забываем, ЧТО КОГДА ВЫХОДИМ ИХ VAGRANT, vagrant halt, а потом уже закрываем терминал
 
 
 https://www.youtube.com/watch?v=nrgO3Q8-6hQ
@@ -25,6 +26,7 @@ https://singularity.lbl.gov/install-mac
 sudo singularity build --sandbox ubuntu/ docker://ubuntu (Focal)
 или
 sudo singularity build --sandbox ubuntu_s docker://ubuntu:18.04 (Bionic)
+sudo singularity build --sandbox ubuntu_s work.sif     (ЕСЛИ ЖЕЛАЕШЬ ПОСТРОИТЬ SANDBOX-КОНТЕЙНЕР из образа (это если заглючил vagrant, то ты можешь взять сохранённый образ и из него всё восстановить)
 
 - запускаем контейнер (т.е. это уже виртуальная система в виртуальной системе)
 sudo singularity exec --writable ubuntu /bin/bash
@@ -60,7 +62,8 @@ sudo singularity shell --writable ubuntu
     password: vagrant
 
 - to copy file from the host to the guest 
-    scp -P 2222 ./test.py vagrant@127.0.0.1:~
+    	scp -P 2222 ./test.py vagrant@127.0.0.1:~
+	scp -P 2222 ./cloud.key vagrant@127.0.0.1:22:.  (ВНИМАТЕЛЬНО С ПОРОТОМ ХОСТА И ГЕСТА, СМ ИХ ПРИ ЗАПУСКЕ VAGRANT UP)
     then move the file from the guest's root to any folder in the image file (e.g. ubuntu_s)
 
 - to upload the sif to sango:
@@ -179,4 +182,13 @@ end
 ========================================================================
 
 
+Если заглючил и не загружается Vagrant up,
+Перезагрузи комп
+sudo "/Library/Application Support/VirtualBox/LaunchDaemons/VirtualBoxStartup.sh" restart
+vagrant halt
+vagrant up
 
+Если не работает, то 
+Vagrant destroy
+потом восстановить sandbox-контейнер их образа:
+sudo singularity build --sandbox ubuntu_s work.sif
