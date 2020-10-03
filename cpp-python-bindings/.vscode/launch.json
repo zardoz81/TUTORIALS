@@ -1,0 +1,22 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "[SHARED library]",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/anaconda3/bin/python", //specifies which program we call (python)
+            "args": ["${workspaceFolder}/testprog.py"], // what code python will run (this code uses a shared library)
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "[SHARED library]" // we need to call theis task
+            // to compile the shared library (the instructins are in the tasks.json)
+        }
+    ]
+}

@@ -1,0 +1,54 @@
+{
+    "telemetry.enableTelemetry": false,
+    "telemetry.enableCrashReporter": false,
+    "window.zoomLevel": 0,
+    "go.autocompleteUnimportedPackages": true,
+    "go.useCodeSnippetsOnFunctionSuggest": true,
+    "go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
+    "go.lintTool": "golint",
+    "go.lintOnSave": "workspace",
+    "go.useLanguageServer": false,
+    "python.dataScience.sendSelectionToInteractiveWindow": false,
+    "editor.fontSize": 16,
+    "python.dataScience.askForKernelRestart": false,
+    "terminal.integrated.fontSize": 16,
+    "terminal.integrated.shell.osx": "/bin/bash",
+    "explorer.confirmDelete": false,
+    "C_Cpp.updateChannel": "Insiders",
+    "C_Cpp.errorSquiggles": "Enabled",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "python.jediEnabled": false,
+    "[python3]": {
+    
+    },
+    "python.pythonPath": "/anaconda3/bin/python",
+    "liveServer.settings.donotShowInfoMsg": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    // "html.format.unformatted": false,
+    // "html.suggest.angular1": true,
+    // "html.suggest.ionic": true,
+    "html.suggest.html5": true,
+    "html.format.extraLiners": "",
+    "diffEditor.renderSideBySide": false,
+    "update.mode": "none",
+    "python.languageServer": "Microsoft",
+    "workbench.preferredDarkColorTheme": "Visual Studio Dark",
+    "workbench.preferredLightColorTheme": "Visual Studio Light",
+    "workbench.colorTheme": "Visual Studio Light",
+    "workbench.colorCustomizations": {
+        "[Visual Studio Light]": { 
+            "activityBar.background": "#E6E6E6",
+            "activityBar.inactiveForeground": "#6A6A6A",
+            "activityBar.foreground": "#333333",
+            "activityBar.activeBackground": "#F3F3F3",
+            "editorBracketMatch.background": "#fffa5c",
+            "editorBracketMatch.border": "#00000000"
+        } 
+    },
+    "git.ignoreLimitWarning": true,
+    
+    
+}

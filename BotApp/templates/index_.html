@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- вызываем скрипты (некоторые локальные, другие - удалённые) -->
+  <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=3fee8092-d268-42df-bba0-bacc4b15ca7f"
+    type="text/javascript"></script>
+  <script src="https://yandex.st/jquery/2.2.3/jquery.min.js" type="text/javascript"></script>
+  <script src="ind_scripts.js" type="text/javascript"></script>
+
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta property="og:type" content="website" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <meta data-react-helmet="true" name="format-detection" content="telephone=no" />
+</head>
+
+
+<body class="page page_view_mobile pointerfocus">
+  <div class="application" id="application">
+    <div class="Page">
+
+
+      <!-- Заголовок сайта -->
+      <div class="Header__wrapper">
+        <header class="Header Page__header Header_normal Header_mobile" id="header">
+          <div class="Header__left" onclick="showMenu()">
+            <div class="Header__menu-icon">
+              <span class="amber-icon amber-icon_menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  viewBox="0 0 24 24" fill="none">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M3 4.75a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1zM3 12.25a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1zM3 19.75a1 1 0 011-1h16a1 1 0 110 2H4a1 1 0 01-1-1z">
+                  </path>
+                </svg></span>
+            </div>
+          </div>
+          <div class="Header__middle">
+            <div class="Header__middle-wrap">
+              <div>
+                <img src="ridesmart.png" width: 25 px height=50px>
+
+              </div>
+            </div>
+          </div>
+          <div class="Header__right">
+            <a class="amber-auth Header__auth" href="https://google.com">
+              <div class="amber-user" status="VALID">
+                <div class="amber-user-avatar amber-user__icon">
+                  <img src="https://avatars.mds.yandex.net/get-yapic/0/0-0/islands-middle" height="42" />
+                </div>
+              </div>
+            </a>
+          </div>
+        </header>
+      </div>
+
+      <!-- Карта -->
+      <div class="MapWrapper">
+        <section style="width: 100%; height: 100%; position: relative;">
+          <div id="map" style="width: 100%; height: 100%;">
+          </div>
+        </section>
+      </div>
+
+      <!-- островок -->
+      <div class="Form Grid__container">
+        <section class="Island">
+          <div class="Fields Grid Grid_padding_m">
+
+            <!-- Адреса -->
+            <div class="Fields__row Fields__row_type_address">
+              <!-- Адрес А -->
+              <div id="FC" class="Fields__col Fields__col_type_address">
+                <div class="FieldAddress FieldAddress_type_a">
+                  <div class="amber-input amber-input_theme_outline amber-input_size_m FieldAddress__control">
+                    <div class="amber-input__box">
+
+                      <span class="amber-input__icon amber-input__icon_left">
+                        <span class="amber-icon amber-icon_point">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="#FA3E2C" d="M12 4c4.416 0 8 3.584 8 8s-3.584 8-8 8-8-3.584-8-8 3.584-8 8-8zm0 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"> </path>
+                          </svg>
+                        </span>
+                      </span>
+                      <span id="right_icon_a" onclick="right_icon_clicked(this)" class="amber-input__icon amber-input__icon_right">
+                        <span class="amber-icon amber-icon_location FieldAddress__location">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path d="M12,4 C16.418,4 20,7.582 20,12 C20,16.418 16.418,20 12,20 C7.582,20 4,16.418 4,12 C4,7.582 7.582,4 12,4 Z M12,5.8 C8.581,5.8 5.8,8.581 5.8,12 C5.8,15.419 8.581,18.2 12,18.2 C15.419,18.2 18.2,15.419 18.2,12 C18.2,8.581 15.419,5.8 12,5.8 Z M15,9 L12.341,16.629 L11,13 L7.56,11.847 L15,9 Z"></path>
+                          </svg>
+                        </span>
+                      </span>
+                      <input type="text" id="address-a" name="fieldAddress-a" autocorrect="off"
+                        autocomplete="no" aria-haspopup="address-a-popup" aria-expanded="false"
+                        placeholder="Адрес места отправления" value="" class="amber-input__control" source="zero"
+                        oninput="onInput(this)" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Flip Address button -->
+              <div class="Fields__col Fields__col_type_switch">
+                <button class="amber-button amber-button_theme_outline amber-button_size_m Fields__switch" type="button">
+                  <span class="amber-button__icon">
+                    <span class="amber-icon amber-icon_flip">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M11.824 20.217a7.988 7.988 0 0 0 7.758-6.036l1.939.488a9.986 9.986 0 0 1-9.697 7.548 9.922 9.922 0 0 1-6.203-2.163l-2.748 2.38L2 14.324l7.386 2.469-2.218 1.921a7.928 7.928 0 0 0 4.656 1.503zm0-16a7.993 7.993 0 0 0-7.751 6.011l-1.937-.496a9.99 9.99 0 0 1 9.688-7.515c2.283 0 4.447.766 6.208 2.167L20.785 2l.872 8.11-7.385-2.469 2.213-1.917a7.933 7.933 0 0 0-4.661-1.507z"></path>
+                      </svg>
+                    </span>
+                  </span>
+                </button>
+              </div>
+
+              <!-- Адрес Б -->
+              <div class="Fields__col Fields__col_type_address">
+                <div class="FieldAddress FieldAddress_type_a">
+                  <div class="amber-input amber-input_theme_outline amber-input_size_m FieldAddress__control">
+                    <div id='addrB' class="amber-input__box">
+                      <span class="amber-input__icon amber-input__icon_left">
+                        <span class="amber-icon amber-icon_point">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="#0596FA" d="M12 4c4.416 0 8 3.584 8 8s-3.584 8-8 8-8-3.584-8-8 3.584-8 8-8zm0 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z">
+                            </path>
+                          </svg>
+                        </span>
+                      </span>
+                      <input type="text" id="address-b" name="fieldAddress-b" autocorrect="off" autocomplete="no" aria-haspopup="address-b-popup" aria-expanded="false" placeholder="Адрес места назначения" value="" class="amber-input__control" source="zero" oninput="onInput(this)" style='padding-right: 40px';/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            
+            <div class="Fields__row Fields__row_type_properties">
+              <div id="phone" class="Fields__col Fields__col_type_auth" style='font-size: 14px;  color: darkgray;'>
+                Укажите ваш телефон
+              </div>
+              
+              <div id="phone" class="Fields__col Fields__col_type_auth" style='font-size: 14px; margin-left: 6px; color: darkgray;'>
+                Выберите дату
+              </div>
+            </div>
+            
+              <!-- Телефон и Дата -->
+            <div class="Fields__row Fields__row_type_properties" style="margin-top: 4px;">
+              
+              <!-- Телефон -->
+              <div id="phone" class="Fields__col Fields__col_type_auth" style='margin-right: 4px;'>
+                <div class="FieldPhone" id='VarField'>
+                  <div class="amber-input amber-input_theme_outline amber-input_size_m FieldPhone__control">
+                    <div class="amber-input__box">
+                      <input type="tel" placeholder="Какого числа?" autocomplete="off"
+                        autocorrect="off" autocapitalize="off" spellcheck="false" name="fieldPhone" value=""
+                        class="amber-input__control">
+                      </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- дата -->
+              <div class="Fields__col Fields__col_type_auth" style='margin-left: 4px;'>
+                <div class="FieldPhone">
+                  <div class="amber-input amber-input_theme_outline amber-input_size_m FieldPhone__control">
+                    <div class="amber-input__box">
+                      <input type="date" placeholder="Номер телефона" autocomplete="off"
+                        autocorrect="off" autocapitalize="off" spellcheck="false" name="fieldPhone" value=""
+                        class="amber-input__control">
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="Fields__row Fields__row_type_properties" style='height: 10px; font-size: 14px;  color: darkgray;'>
+              Укажите временной интервал начала поездки
+            </div>
+              
+            <div class="Fields__row Fields__row_type_properties">
+              <div id="phone" class="Fields__col Fields__col_type_auth" style='font-size: 14px;  color: darkgray;'>
+                с
+              </div>
+              
+              <div id="phone" class="Fields__col Fields__col_type_auth" style='font-size: 14px; margin-left: 6px; color: darkgray;'>
+                до
+              </div>
+            </div>
+
+            <!-- время от и до -->
+            <div class="Fields__row Fields__row_type_properties" style="margin-top: 4px ;">
+              <!-- время от -->
+              <div class="Fields__col Fields__col_type_auth" style='margin-right: 4px;'>
+                <div class="FieldPhone">
+                  <div class="amber-input amber-input_theme_outline amber-input_size_m FieldPhone__control">
+                    <div class="amber-input__box">
+                      <select style="width: 100%; height: 36px">
+                        <option value="00:00">00:00</option>
+                        <option value="00:30">00:30</option>
+                        <option value="01:00">01:00</option>
+                        <option value="01:30">01:30</option>
+                        <option value="02:00">02:00</option>
+                        <option value="02:30">02:30</option>
+                        <option value="03:00">03:00</option>
+                        <option value="03:30">03:30</option>
+                        <option value="04:00">04:00</option>
+                        <option value="04:30">04:30</option>
+                        <option value="05:00">05:00</option>
+                        <option value="05:30">05:30</option>
+                        <option value="06:00">06:00</option>
+                        <option value="06:30">06:30</option>
+                        <option value="07:00">07:00</option>
+                        <option value="07:30">07:30</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:30">18:30</option>
+                        <option value="19:00">19:00</option>
+                        <option value="19:30">19:30</option>
+                        <option value="20:00">20:00</option>
+                        <option value="20:30">20:30</option>
+                        <option value="21:00">21:00</option>
+                        <option value="21:30">21:30</option>
+                        <option value="22:00">22:00</option>
+                        <option value="22:30">22:30</option>
+                        <option value="23:00">23:00</option>
+                        <option value="23:30">23:30</option>
+                      </select>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <!-- время до -->
+              <div class="Fields__col Fields__col_type_auth" style='margin-left: 4px;'>
+                <div class="FieldPhone">
+                  <div class="amber-input amber-input_theme_outline amber-input_size_m FieldPhone__control">
+                    <div class="amber-input__box">
+                      <select style="width: 100%; height: 36px">
+                        <option value="00:00">00:00</option>
+                        <option value="00:30">00:30</option>
+                        <option value="01:00">01:00</option>
+                        <option value="01:30">01:30</option>
+                        <option value="02:00">02:00</option>
+                        <option value="02:30">02:30</option>
+                        <option value="03:00">03:00</option>
+                        <option value="03:30">03:30</option>
+                        <option value="04:00">04:00</option>
+                        <option value="04:30">04:30</option>
+                        <option value="05:00">05:00</option>
+                        <option value="05:30">05:30</option>
+                        <option value="06:00">06:00</option>
+                        <option value="06:30">06:30</option>
+                        <option value="07:00">07:00</option>
+                        <option value="07:30">07:30</option>
+                        <option value="08:00">08:00</option>
+                        <option value="08:30">08:30</option>
+                        <option value="09:00">09:00</option>
+                        <option value="09:30">09:30</option>
+                        <option value="10:00">10:00</option>
+                        <option value="10:30">10:30</option>
+                        <option value="11:00">11:00</option>
+                        <option value="11:30">11:30</option>
+                        <option value="12:00">12:00</option>
+                        <option value="12:30">12:30</option>
+                        <option value="13:00">13:00</option>
+                        <option value="13:30">13:30</option>
+                        <option value="14:00">14:00</option>
+                        <option value="14:30">14:30</option>
+                        <option value="15:00">15:00</option>
+                        <option value="15:30">15:30</option>
+                        <option value="16:00">16:00</option>
+                        <option value="16:30">16:30</option>
+                        <option value="17:00">17:00</option>
+                        <option value="17:30">17:30</option>
+                        <option value="18:00">18:00</option>
+                        <option value="18:30">18:30</option>
+                        <option value="19:00">19:00</option>
+                        <option value="19:30">19:30</option>
+                        <option value="20:00">20:00</option>
+                        <option value="20:30">20:30</option>
+                        <option value="21:00">21:00</option>
+                        <option value="21:30">21:30</option>
+                        <option value="22:00">22:00</option>
+                        <option value="22:30">22:30</option>
+                        <option value="23:00">23:00</option>
+                        <option value="23:30">23:30</option>
+                      </select>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+                
+
+
+            <div class="Fields__hr"></div>
+            <div class="Fields__row Fields__row_type_tariff Fields__row_noflex Grid Grid_padding_sub-m">
+              <div class="FieldTariff">
+                <div class="Benefits Benefits_defaultAlign_start Benefits_count_0">
+                  <div class="Benefits__wrapper">
+                    <div class="Benefits__scroller">
+                      <div class="Benefits__card-grid" role="list"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="Fields__row Fields__row_noflex Grid Grid_padding_sub-m"></div>
+          </div>
+          <button class="amber-button amber-button_theme_accent amber-button_size_xl Form__order" type="button">
+            <span class="amber-button__text">Подтвердить</span>
+          </button>
+        </section>
+      </div>
+
+      <!-- <button onclick="myFunction()">Click me</button> -->
+    </div>
+  </div>
+
+  <!-- Менюшка -->
+  <div id="side-menu" class="amber-mobile-menu Header__mobile-menu amber-mobile-menu_position_left">
+    <div class="amber-mobile-menu__overlay"></div>
+    <div class="amber-mobile-menu__content">
+      <nav class="amber-mobile-menu__links">
+        <section class="amber-mobile-menu__section-links">
+          <nav class="MenuItem" data-name="header-links.rider" tabindex="0">
+            <input type="checkbox" class="DropDownMenu__input" id="header-links.rider" name="dropDownMenu" />
+            <div class="DropDownMenu__menu-item">
+              <label for="Пользователям" class="DropDownMenu__label">
+                <p class="DropDownMenu__title">Пользователям</p>
+                <span class="amber-icon amber-icon_chevron_down_light DropDownMenu__arrow-icon"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M17.354 8.646a.5.5 0 010 .708L12 14.707 6.646 9.354a.5.5 0 11.708-.708L12 13.293l4.646-4.647a.5.5 0 01.708 0z">
+                    </path>
+                  </svg></span>
+              </label>
+              <ul class="DropDownMenu__list">
+                <a data-name="header-links.rider-0" class="MenuItem__link" href="/action/app/">Скачать приложение</a><a
+                  data-name="header-links.rider-1" class="MenuItem__link" href="/support/?lang=ru">Написать в
+                  поддержку</a><a data-name="header-links.rider-2" class="MenuItem__link"
+                  href="/action/safety/rider-safety/">Узнать о безопасности</a><a data-name="header-links.rider-3"
+                  class="MenuItem__link" href="/blog/">Новости сервиса</a>
+              </ul>
+            </div>
+          </nav>
+          <nav class="MenuItem" data-name="header-links.driver" tabindex="0">
+            <input type="checkbox" class="DropDownMenu__input" id="header-links.driver" name="dropDownMenu" />
+            <div class="DropDownMenu__menu-item">
+              <label for="Водителям" class="DropDownMenu__label">
+                <p class="DropDownMenu__title">Водителям</p>
+                <span class="amber-icon amber-icon_chevron_down_light DropDownMenu__arrow-icon"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M17.354 8.646a.5.5 0 010 .708L12 14.707 6.646 9.354a.5.5 0 11.708-.708L12 13.293l4.646-4.647a.5.5 0 01.708 0z">
+                    </path>
+                  </svg></span>
+              </label>
+              <ul class="DropDownMenu__list">
+                <a data-name="header-links.driver-0" class="MenuItem__link" href="/rabota/">Стать водителем в
+                  парке</a><a data-name="header-links.driver-1" class="MenuItem__link" href="/smz/">Стать
+                  самозанятым</a><a data-name="header-links.driver-2" class="MenuItem__link"
+                  href="/rabota/delivery/">Стать курьером</a><a data-name="header-links.driver-3" class="MenuItem__link"
+                  href="/rabota/arenda/">Арендовать авто</a>
+              </ul>
+            </div>
+          </nav>
+          <nav class="MenuItem" data-name="header-links.business" tabindex="0">
+            <input type="checkbox" class="DropDownMenu__input" id="header-links.business" name="dropDownMenu" />
+            <div class="DropDownMenu__menu-item">
+              <label for="Бизнесу" class="DropDownMenu__label">
+                <p class="DropDownMenu__title">Бизнесу</p>
+                <span class="amber-icon amber-icon_chevron_down_light DropDownMenu__arrow-icon"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M17.354 8.646a.5.5 0 010 .708L12 14.707 6.646 9.354a.5.5 0 11.708-.708L12 13.293l4.646-4.647a.5.5 0 01.708 0z">
+                    </path>
+                  </svg></span>
+              </label>
+              <ul class="DropDownMenu__list">
+                <a data-name="header-links.business-0" class="MenuItem__link" href="/business/">Подключить поездки</a><a
+                  data-name="header-links.business-1" class="MenuItem__link"
+                  href="/action/business/delivery/?utm_source=main-site-taxi&amp;utm_campaign=block_for_business">Подключить
+                  доставку</a>
+              </ul>
+            </div>
+          </nav>
+          <nav class="MenuItem" data-name="header-links.partner" tabindex="0">
+            <input type="checkbox" class="DropDownMenu__input" id="header-links.partner" name="dropDownMenu" />
+            <div class="DropDownMenu__menu-item">
+              <label for="Партнёрам" class="DropDownMenu__label">
+                <p class="DropDownMenu__title">Партнёрам</p>
+                <span class="amber-icon amber-icon_chevron_down_light DropDownMenu__arrow-icon"><svg
+                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M17.354 8.646a.5.5 0 010 .708L12 14.707 6.646 9.354a.5.5 0 11.708-.708L12 13.293l4.646-4.647a.5.5 0 01.708 0z">
+                    </path>
+                  </svg></span>
+              </label>
+              <ul class="DropDownMenu__list">
+                <a data-name="header-links.partner-0" class="MenuItem__link"
+                  href="/action/proposal/development_carpark/">Подключить таксопарк</a><a
+                  data-name="header-links.partner-1" class="MenuItem__link" href="/action/proposal/mypark/">Открыть
+                  таксопарк</a><a data-name="header-links.partner-2" class="MenuItem__link"
+                  href="/action/proposal/mypark_development/">Расширить таксопарк</a>
+              </ul>
+            </div>
+          </nav>
+        </section>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Варианты -->
+  <div class="Suggest FieldAddress__suggest" role="dialog" id="address-a-popup" style="
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 328px;
+        transform: translate3d(16px, 460px, 0px);
+        will-change: transform;
+      " x-placement="bottom-start">
+    <ul id="ty_a" role="listbox" class="amber-list Suggest__list">
+    </ul>
+  </div>
+  
+  <div class="Suggest FieldAddress__suggest" role="dialog" id="address-b-popup" style="
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 328px;
+        transform: translate3d(16px, 460px, 0px);
+        will-change: transform;
+      " x-placement="bottom-start">
+    <ul id="ty_b" role="listbox" class="amber-list Suggest__list">
+    </ul>
+  </div>
+</body>
+</html>

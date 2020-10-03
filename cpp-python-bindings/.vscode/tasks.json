@@ -1,0 +1,27 @@
+{
+    "tasks": [
+        {   //this task compiles a shared library
+            "type": "shell",
+            "label": "[SHARED library]",
+            "command": "/usr/bin/c++",
+            "args": [
+                "-std=gnu++11", //these params are decided as described in the c++ tutorial
+                "-dynamiclib", // we need not just a binary, but a shared library
+                "-g",       // we tell VScode to use the current
+                "${file}",  // file as the source code to compile
+                "-o",       // output name (can be renamed into .dylib (Mac) or .so (linux))
+                "${workspaceFolder}/${fileBasenameNoExtension}.so"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }],
+    "version": "2.0.0"
+}
