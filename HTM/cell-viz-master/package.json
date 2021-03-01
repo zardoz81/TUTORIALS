@@ -14,7 +14,7 @@
     "babel-preset-env": "^1.6.1",
     "math": "0.0.3",
     "mathjs": "^3.4.1",
-    "three": "^0.91.0",
+    "three": "^0.125.0",
     "three-collada-loader": "0.0.1",
     "three-obj-loader": "^1.0.2",
     "three-trackballcontrols": "0.0.5"
