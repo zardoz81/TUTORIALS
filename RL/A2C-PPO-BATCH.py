@@ -16,9 +16,9 @@ from torch.distributions import Categorical
 import gym
 
 ############## Hyperparameters ##############
-render = False
+render = True
 _ppo = True
-from_scratch = True
+from_scratch = False
 
 # env_name = "CartPole-v1"
 env_name = "LunarLander-v2"
@@ -98,6 +98,7 @@ class ActorCritic(nn.Module):
     
     def evaluate(self, state, action):
         # here the critic evaluates the VALUE of the current state
+        # see the PDF (p.8) for explanation of what VALUE is.
         action_probs = self.action_layer(state)
         dist = Categorical(action_probs)
         

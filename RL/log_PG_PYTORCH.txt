@@ -1,0 +1,1 @@
+episode 0	loss -7.4587107	 episode reward -21.0	 number of down act 0.4588701684836472	 game_len 1009	

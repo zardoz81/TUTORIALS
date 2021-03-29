@@ -21,22 +21,23 @@ class Mish(nn.Module):
         return mish(input)
 
 # ************
-render = False # False for traning, true for Testing
+render = True # False for traning, true for Testing
+Ppo = True
 env_name = "CartPole-v1"
-# env_name = "LunarLander-v2" #
+# env_name = "LunarLander-v2"
 max_timesteps = 500         # max timesteps in one episode
-gamma = 0.98
+gamma = 0.99
 eps = 0.2
 
 max_grad_norm = 0.5
-lra = 1e-3
-lrc = 1e-3
+lr_actor = 1e-4
+lr_critic = 1e-4
 
 EPISODES = 5000
 stat_interval = 10
-act_actor =  Mish() #nn.Tanh() # Mish()
+act_actor =  Mish() # Mish()
 act_critic = nn.ReLU() # Mish
-Ppo = True
+
 # ************
 
 s = 0
@@ -61,9 +62,7 @@ class Actor(nn.Module):
     
     def forward(self, X):
         return self.model(X)
-
-    
-    
+  
 # Critic module
 class Critic(nn.Module):
     def __init__(self, state_dim, activation):
@@ -87,12 +86,12 @@ state_dim = env.observation_space.shape[0]
 n_actions = env.action_space.n
 actor = Actor(state_dim, n_actions, act_actor)
 critic = Critic(state_dim, act_critic)
-adam_actor = torch.optim.Adam(actor.parameters(), lr=lra)
-adam_critic = torch.optim.Adam(critic.parameters(), lr=lrc)
+adam_actor = torch.optim.Adam(actor.parameters(), lr=lr_actor)
+adam_critic = torch.optim.Adam(critic.parameters(), lr=lr_critic)
 
 if render:
-    actor.load_state_dict(torch.load('./actor_{}.pth'.format('LunarLander'), map_location=torch.device('cpu')))
-    critic.load_state_dict(torch.load('./critic_{}.pth'.format('LunarLander'), map_location=torch.device('cpu')))
+    actor.load_state_dict(torch.load('./actor_{}.pth'.format(env_name), map_location=torch.device('cpu')))
+    critic.load_state_dict(torch.load('./critic_{}.pth'.format(env_name), map_location=torch.device('cpu')))
 
 torch.manual_seed(1)
 
@@ -101,16 +100,22 @@ def clip_grad_norm_(module, max_grad_norm):
 
 def policy_loss(old_log_prob, log_prob, advantage, eps, Ppo=False):
     if Ppo:
-        ratio = (log_prob - old_log_prob).exp()
-        clipped = torch.clamp(ratio, 1-eps, 1+eps)*advantage
-        m = torch.min(ratio*advantage, clipped)
+        # ratio = (log_prob - old_log_prob).exp()
+        # clipped = torch.clamp(ratio, 1-eps, 1+eps) * advantage
+        # m = torch.min(ratio * advantage, clipped)
+        ratio = (old_log_prob - log_prob).exp()
+        clipped_ratio = torch.clamp(ratio, 1-eps, 1+eps)
+        clipped_log_prob = old_log_prob * clipped_ratio
+        m = clipped_log_prob * advantage
     else:
         m = log_prob * advantage
-    return -m
+    return m
 
 running_reward = 0
+MAX_RWD = 0
 total_steps = 0
 tt = time.time()
+
 for i in range(EPISODES):
     
     prev_prob_act = None
@@ -125,18 +130,20 @@ for i in range(EPISODES):
         probs = actor(t(state)) # get probability distribution given the state
         dist = torch.distributions.Categorical(probs=probs) # ??????????
         action = dist.sample()  # sample action from this dist
+        dist_entropy = dist.entropy()
         prob_act = dist.log_prob(action) # get log of the probability distribution
         
         next_state, reward, done, info = env.step(action.detach().data.numpy())
-        advantage = reward + (1-done)*gamma*critic(t(next_state)) - critic(t(state))
+
+        advantage = reward + (1-done) * gamma * critic(t(next_state))    - critic(t(state))
         
-        # if not render:
-	       #  w.add_scalar("loss/advantage", advantage, global_step=s)
-	       #  w.add_scalar("actions/action_0_prob", dist.probs[0], global_step=s)
-	       #  w.add_scalar("actions/action_1_prob", dist.probs[1], global_step=s)
-        #     # pass
-        # else:
-        #     env.render()
+        if not render:
+	        # w.add_scalar("loss/advantage", advantage, global_step=s)
+	        # w.add_scalar("actions/action_0_prob", dist.probs[0], global_step=s)
+	        # w.add_scalar("actions/action_1_prob", dist.probs[1], global_step=s)
+            pass
+        else:
+            env.render()
         
         total_reward += reward
         if done:
@@ -144,14 +151,16 @@ for i in range(EPISODES):
         state = next_state
         
         if prev_prob_act:
-            actor_loss = policy_loss(prev_prob_act.detach(), prob_act, advantage.detach(), eps, Ppo)
+            actor_loss = -policy_loss(prev_prob_act.detach(), prob_act, advantage.detach(), eps, Ppo) - 0.01*dist_entropy
             adam_actor.zero_grad()
             actor_loss.backward()
             # clip_grad_norm_(adam_actor, max_grad_norm)
             adam_actor.step()
 
-            critic_loss = advantage.pow(2).mean() # the critic produces V(s_t), Q(s_t,a_t) is the objective,
-            # i.e. r_{t+1} + gamma * V(s_{t+1}). A(s_t, a_t) = Q(s_t, a-t) - V(s_t) SEE materials in the folder
+            critic_loss = advantage.pow(2).mean() 
+            # the critic network outputs V(s_t)
+            # the objective is Q(s_t,a_t) = r_{t} + gamma * V(s_{t+1}). 
+            # A(s_t, a_t) = Q(s_t, a-t) - V(s_t)    SEE materials in the folder
             # we want V(s_t) to be the same as Q(s_t, a_t).
 
 
@@ -182,12 +191,17 @@ for i in range(EPISODES):
         with open('rw_online.pickle', 'wb') as f:
             pickle.dump(episode_rewards, f)
         
-        print('Episode: {:03d}\t avg_RWD: {:.2f} \t avg_steps: {}\t elapsed {:.2f} s.'.format(i,
-                                                                 running_reward/stat_interval,
-                                                                 total_steps/stat_interval,
-                                                                 time.time()-tt))
-        running_reward, total_steps, tt = 0, 0, time.time()
+        print(f'Episode: {i:03d}\t\
+                avg_RWD: {running_reward/stat_interval:.2f}\t\
+                avg_steps: {total_steps/stat_interval}\t\
+                elapsed {(time.time()-tt):.2f} s.')
 
-        if not render:
-            torch.save(actor.state_dict(), './actor_{}.pth'.format('LunarLander'))
-            torch.save(critic.state_dict(), './critic_{}.pth'.format('LunarLander'))
+        # if we render and we beat our reward record, we dump the weights:
+        if not render and (MAX_RWD < running_reward/stat_interval):
+            print(f'beat previous record: {MAX_RWD}. Saving.')
+            MAX_RWD = running_reward/stat_interval
+            torch.save(actor.state_dict(), f'./actor_{env_name}.pth')
+            torch.save(critic.state_dict(), f'./critic_{env_name}.pth')            
+        
+        # clear the scores and counters:
+        running_reward, total_steps, tt = 0, 0, time.time()
